@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 // Base URL for the book API
-const BASE_URL = 'http://your-api-url/api/books'; // Replace with your actual API URL
+const BASE_URL = 'http://localhost:3000/api/books';
 
 // Task 10: Get all books using async/await
 async function getAllBooks() {
@@ -9,7 +9,7 @@ async function getAllBooks() {
         const response = await axios.get(BASE_URL);
         console.log('All Books:', response.data);
     } catch (error) {
-        console.error('Error fetching all books:', error.message);
+        console.error('Error fetching all books:', error.response ? error.response.data : error.message); 
     }
 }
 
