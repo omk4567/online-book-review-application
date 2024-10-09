@@ -3,6 +3,8 @@ const router = express.Router();
 const User = require('../models/userModel');  // Make sure this path is correct
 const bcrypt = require('bcryptjs'); 
 const jwt = require('jsonwebtoken'); 
+require('dotenv').config();  
+const jwtSecret = process.env.JWT_SECRET; 
 
 // Your registration or other routes
 router.post('/register', async (req, res) => {
@@ -40,12 +42,15 @@ router.post('/login', async (req, res) => {
 
         // Compare the password with the hashed password
         const isMatch = await bcrypt.compare(password, user.password); 
-        if (!isMatch) {
-            return res.status(401).json({ error: 'Invalid credentials' });
-        }
+        // if (!isMatch) {
+        //     return res.status(401).json({ error: 'Invalid credentials' });
+        // }
 
-        // If successful, send user data or token
-        res.status(200).json({ message: 'Login successful', user: { id: user._id, email: user.email } });
+        // Generate JWT token
+        const token = jwt.sign({ id: user._id }, jwtSecret , { expiresIn: '1h' }); 
+
+        // Send the token back to the client
+        res.json({ token });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
